@@ -63,7 +63,7 @@ public class UserController {
     public BillEntity deleteBillbyUser(@PathVariable("user") String user, @PathVariable("bill_id") Integer bill_id) throws Exception {
         Optional<UserEntity> usuario = userRepository.findByUsername(user);
          if (usuario.isPresent()) {
-        Optional<BillEntity> bill = billRepository.findById(bill_id);
+            Optional<BillEntity> bill = billRepository.findById(bill_id);
         
         if (bill.isPresent()) {
             BillEntity billToDelete = bill.get();
@@ -81,6 +81,29 @@ public class UserController {
         throw new Exception("El usuario no existe");
     }
 
+    }
+
+    @GetMapping("/{user}/bills/{bill_id}")
+    public BillEntity getBillbyUser(@PathVariable String user, @PathVariable Integer bill_id) throws Exception{
+        Optional<UserEntity> usuario = userRepository.findByUsername(user);
+        
+        if (usuario.isPresent()) {
+            Optional<BillEntity> bill = billRepository.findById(bill_id);
+            
+            if (bill.isPresent()) {
+                BillEntity billToReturn = bill.get();
+                
+                if (billToReturn.getUser().getUsername().equals(user)) {
+                    return billToReturn;
+                } else {
+                    throw new Exception("El movimiento no pertenece al usuario especificado");
+                }
+            } else {
+                throw new Exception("El movimiento no existe");
+            }
+        } else {
+            throw new Exception("El usuario no existe");
+        }
     }
 
 
