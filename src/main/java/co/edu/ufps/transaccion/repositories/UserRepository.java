@@ -8,6 +8,6 @@ import co.edu.ufps.transaccion.entities.UserEntity;
 
 public interface UserRepository extends JpaRepository<UserEntity,Integer> {
 
-    Optional<UserEntity> findByUsername(String username);
+    public Optional<UserEntity> findByUsername(String username);
     
 }

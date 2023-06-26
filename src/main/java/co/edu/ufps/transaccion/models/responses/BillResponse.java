@@ -7,7 +7,7 @@ public class BillResponse {
 
     private Integer type;
 
-    private Integer value;
+    private Float value;
 
     private String observation;
 }

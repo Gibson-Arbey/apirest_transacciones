@@ -32,11 +32,13 @@ public class UserController {
     BillRepository billRepository;
 
     @GetMapping("/{user}/bills")
-    public List<BillEntity> getBillsbyUser(@PathVariable String user) {
+    public List<BillEntity> getBillsbyUser(@PathVariable("user") String user) {
         List<BillEntity> bills = new ArrayList<>();
-        Optional<UserEntity> usuario = userRepository.findByUsername(user);
-        if (usuario.isPresent()) {
-            bills = usuario.get().getBills();
+        Optional<UserEntity> usuarioOptional = userRepository.findByUsername(user);
+        System.out.println("*************" +usuarioOptional.get().getUsername());
+        if (usuarioOptional.isPresent()) {
+            UserEntity usuario = usuarioOptional.get(); 
+            bills = usuario.getBills();
         }
         return bills;
     }
