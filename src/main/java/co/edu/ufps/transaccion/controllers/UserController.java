@@ -60,27 +60,26 @@ public class UserController {
 	}
 
     @DeleteMapping("/{user}/bills/{bill_id}")
-    public BillEntity deleteBillbyUser(@PathVariable String user, @PathVariable Integer bill_id) throws Exception {
+    public BillEntity deleteBillbyUser(@PathVariable("user") String user, @PathVariable("bill_id") Integer bill_id) throws Exception {
         Optional<UserEntity> usuario = userRepository.findByUsername(user);
-        if (usuario.isPresent()) {
-            List<BillEntity> bills = usuario.get().getBills();
-            BillEntity billToReturn = new BillEntity();
-            boolean existe = false;
-            for (BillEntity bill : bills) {
-                if (bill.getId()==bill_id) {
-                    existe = true;
-                    billToReturn = bill;
-                }
-            }
-            if (existe) {
+         if (usuario.isPresent()) {
+        Optional<BillEntity> bill = billRepository.findById(bill_id);
+        
+        if (bill.isPresent()) {
+            BillEntity billToDelete = bill.get();
+            
+            if (billToDelete.getUser().getUsername().equals(user)) {
                 billRepository.deleteById(bill_id);
-                return billToReturn;
+                return billToDelete;
             } else {
-                throw new Exception("La factura no existe");
+                throw new Exception("La factura no pertenece al usuario especificado");
             }
-        }else{
-            throw new Exception("El usuario no existe");
+        } else {
+            throw new Exception("La factura no existe");
         }
+    } else {
+        throw new Exception("El usuario no existe");
+    }
 
     }
 
